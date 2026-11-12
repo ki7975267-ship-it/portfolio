@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Контакты — автосервис «ТОРК»</title>
+<meta name="description" content="Адрес, часы работы и телефон автосервиса «ТОРК». Задайте вопрос мастеру онлайн.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Russo+One&family=Inter+Tight:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/style.css">
+<style>
+.cgrid{display:grid;grid-template-columns:1fr 1.15fr;gap:24px;align-items:stretch}
+.cards{display:grid;gap:12px}
+.cc{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:22px;display:flex;gap:16px;align-items:flex-start}
+.cc b{display:block;font-size:18px}.cc span{color:var(--muted)}
+.map{border-radius:24px;overflow:hidden;background:#E9E7E1;min-height:420px;position:relative}
+.map svg{position:absolute;inset:0;width:100%;height:100%}
+.qa{display:grid;grid-template-columns:1fr 1fr;gap:24px;align-items:start}
+.form{background:var(--card);border:1px solid var(--line);border-radius:24px;padding:28px;display:grid;gap:14px}
+details{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:0 22px;margin-bottom:10px}
+summary{cursor:pointer;list-style:none;padding:20px 0;font-weight:700;font-size:17px;display:flex;justify-content:space-between;gap:16px}
+summary::-webkit-details-marker{display:none}
+summary::after{content:"+";flex:none;width:30px;height:30px;border-radius:9px;background:#FFF4D1;display:grid;place-items:center;transition:transform .2s}
+details[open] summary::after{transform:rotate(45deg)}
+details p{color:var(--muted);padding-bottom:18px}
+@media (max-width:1000px){.cgrid,.qa{grid-template-columns:1fr}.map{min-height:300px}}
+</style>
+</head>
+<body>
+<div id="top"></div>
+<div class="page-head"><div class="wrap">
+  <div class="crumbs"><a href="index.html">Главная</a> / Контакты</div>
+  <h1>Контакты</h1>
+  <p>Приезжайте без записи на диагностику или выберите время онлайн — так быстрее.</p>
+</div></div>
+
+<section style="padding-top:40px">
+  <div class="wrap cgrid">
+    <div class="cards reveal">
+      <div class="cc"><span class="ic"><svg viewBox="0 0 24 24"><path d="M12 22s7-6.2 7-12a7 7 0 1 0-14 0c0 5.8 7 12 7 12z" fill="none" stroke="#121417" stroke-width="2"/><circle cx="12" cy="10" r="2.6" fill="#121417"/></svg></span><div><b>ул. Моторная, 7</b><span>Въезд с торца, жёлтые ворота. Парковка для клиентов.</span></div></div>
+      <div class="cc"><span class="ic"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" fill="none" stroke="#121417" stroke-width="2"/><path d="M12 7v5l3 2" fill="none" stroke="#121417" stroke-width="2" stroke-linecap="round"/></svg></span><div><b>Пн–Пт 8:00–21:00</b><span>Сб–Вс 9:00–19:00 · без перерыва</span></div></div>
+      <div class="cc"><span class="ic"><svg viewBox="0 0 24 24"><path d="M5 3h4l2 5-2.5 1.5a11 11 0 0 0 6 6L16 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 5a2 2 0 0 1 2-2z" fill="none" stroke="#121417" stroke-width="2" stroke-linejoin="round"/></svg></span><div><b>+7 (900) 000-00-00</b><span>Звонки и сообщения в мессенджерах</span></div></div>
+      <a class="btn btn-y" href="booking.html" style="margin-top:6px">Записаться онлайн</a>
+    </div>
+    <div class="map reveal" aria-label="Схема проезда">
+      <svg viewBox="0 0 600 420" preserveAspectRatio="xMidYMid slice">
+        <rect width="600" height="420" fill="#E9E7E1"/>
+        <g fill="#DDE3D3"><rect x="20" y="20" width="150" height="110" rx="10"/><rect x="420" y="300" width="160" height="100" rx="10"/></g>
+        <g fill="#DCD8CF"><rect x="210" y="20" width="170" height="110" rx="10"/><rect x="420" y="20" width="160" height="110" rx="10"/><rect x="20" y="300" width="150" height="100" rx="10"/><rect x="210" y="300" width="170" height="100" rx="10"/><rect x="20" y="170" width="150" height="90" rx="10"/></g>
+        <g stroke="#FBFAF7" stroke-width="22" fill="none"><path d="M-10 150h620M-10 280h620M190-10v440M400-10v440"/></g>
+        <path d="M600 150H400V215h-18" stroke="#FFC531" stroke-width="6" fill="none" stroke-dasharray="2 10" stroke-linecap="round"/>
+        <rect x="210" y="170" width="170" height="90" rx="10" fill="#121417"/>
+        <text x="295" y="222" fill="#FFC531" font-family="Russo One, sans-serif" font-size="22" text-anchor="middle">ТОРК</text>
+        <g transform="translate(372 205)"><circle r="16" fill="#FFC531"/><circle r="6" fill="#121417"/></g>
+        <text x="500" y="140" fill="#6E737A" font-family="Inter Tight, sans-serif" font-size="13" text-anchor="middle">ул. Моторная</text>
+      </svg>
+    </div>
+  </div>
+</section>
+
+<section style="padding-top:20px">
+  <div class="wrap qa">
+    <div class="reveal">
+      <span class="kicker">Вопрос мастеру</span><h2 style="margin-bottom:22px">Не уверены, что сломалось?</h2>
+      <div class="form" id="form">
+        <div class="field"><label for="qn">Имя</label><input id="qn" placeholder="Как к вам обращаться"></div>
+        <div class="field"><label for="qp">Телефон</label><input id="qp" type="tel" placeholder="+7 (___) ___-__-__"></div>
+        <div class="field"><label for="qt">Опишите проблему</label><textarea id="qt" placeholder="Марка, модель и что беспокоит"></textarea></div>
+        <button class="btn btn-d" id="send">Отправить вопрос</button>
+      </div>
+      <div class="form" id="ok" style="display:none;text-align:center;justify-items:center"><div class="tick"><svg width="34" height="34" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5" stroke="#fff" stroke-width="2.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <h3 style="font-size:24px">Вопрос отправлен</h3><p style="color:var(--muted)">Мастер перезвонит в течение 30 минут в рабочее время.</p></div>
+    </div>
+    <div class="reveal">
+      <span class="kicker">Частые вопросы</span><h2 style="margin-bottom:22px">Коротко о главном</h2>
+      <details open><summary>Сколько длится диагностика?</summary><p>Компьютерная — около 30 минут, диагностика ходовой — около 40. Если ремонт делаем у нас, диагностика ходовой бесплатна.</p></details>
+      <details><summary>Можно приехать со своими запчастями?</summary><p>Да. Гарантия в этом случае распространяется на работу, а не на сами детали.</p></details>
+      <details><summary>Как оплатить?</summary><p>Картой, наличными или по QR-коду через СБП. Для компаний — по счёту с закрывающими документами.</p></details>
+      <details><summary>Где подождать, пока идёт ремонт?</summary><p>В зоне ожидания: кофе, Wi-Fi и окно в бокс — можно посмотреть на работу мастера.</p></details>
+    </div>
+  </div>
+</section>
+
+<div id="foot"></div>
+<script src="assets/app.js"></script>
+<script>
+document.getElementById('send').onclick = () => {
+  const n = document.getElementById('qn'), p = document.getElementById('qp');
+  n.classList.toggle('bad', !n.value.trim());
+  p.classList.toggle('bad', !phoneOk(p));
+  if (!n.value.trim() || !phoneOk(p)) return;
+  document.getElementById('form').style.display = 'none';
+  document.getElementById('ok').style.display = 'grid';
+};
+</script>
+</body>
+</html>

@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>О сервисе — автосервис «ТОРК»</title>
+<meta name="description" content="История автосервиса «ТОРК», команда мастеров, оборудование и гарантия 12 месяцев на работы.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Russo+One&family=Inter+Tight:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/style.css">
+<style>
+.story{display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:start}
+.story p{font-size:18px;color:#3B3F45;margin-bottom:16px}
+.tl{border-left:2px solid var(--line);padding-left:26px;display:grid;gap:26px}
+.tl div{position:relative}
+.tl div::before{content:"";position:absolute;left:-34px;top:6px;width:14px;height:14px;border-radius:50%;background:var(--yellow);border:3px solid var(--paper)}
+.tl b{font-family:var(--head);font-weight:400;font-size:22px;display:block}.tl span{color:var(--muted)}
+.nums{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+.nums div{border:1px solid rgba(255,255,255,.1);border-radius:20px;padding:26px}
+.nums b{display:block;font-family:var(--head);font-weight:400;font-size:40px;color:var(--yellow)}.nums span{color:rgba(255,255,255,.6)}
+.team{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.mm{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:24px;display:flex;gap:16px;align-items:center}
+.mm .av{width:60px;height:60px;border-radius:16px;background:var(--ink);color:var(--yellow);display:grid;place-items:center;font-family:var(--head);font-size:22px;flex:none}
+.mm b{display:block;font-size:18px}.mm span{color:var(--muted);font-size:14px;line-height:1.4;display:block}
+.eq{display:flex;flex-wrap:wrap;gap:10px}
+.eq span{padding:12px 18px;border-radius:14px;background:var(--card);border:1px solid var(--line);font-weight:600}
+.guar{display:grid;grid-template-columns:1.2fr 1fr;gap:30px;background:var(--card);border:1px solid var(--line);border-radius:28px;padding:40px;align-items:center}
+.guar ul{list-style:none;display:grid;gap:12px}
+.guar li{display:flex;gap:12px}.guar li::before{content:"✓";flex:none;width:26px;height:26px;border-radius:50%;background:var(--yellow);display:grid;place-items:center;font-weight:800;font-size:14px}
+.shield{font-family:var(--head);font-size:110px;line-height:1;color:var(--ink)}.shield small{display:block;font-size:22px;color:var(--muted);font-family:var(--sans);font-weight:600}
+@media (max-width:1000px){.story,.guar{grid-template-columns:1fr}.nums{grid-template-columns:1fr 1fr}.team{grid-template-columns:1fr 1fr}}
+@media (max-width:600px){.team,.nums{grid-template-columns:1fr}.nums b{font-size:32px}.guar{padding:26px}.shield{font-size:80px}}
+</style>
+</head>
+<body>
+<div id="top"></div>
+<div class="page-head"><div class="wrap">
+  <div class="crumbs"><a href="index.html">Главная</a> / О сервисе</div>
+  <h1>О сервисе</h1>
+  <p>Мы начинали с одного бокса и простого правила: клиент должен понимать, за что платит. Это правило работает до сих пор.</p>
+</div></div>
+
+<section>
+  <div class="wrap story">
+    <div class="reveal">
+      <span class="kicker">История</span>
+      <p>«ТОРК» открыли два механика, которые устали от сервисов, где «нашли ещё кое-что» в конце ремонта. Мы сделали наоборот: смета до начала работ и фото каждой замены.</p>
+      <p>Сегодня у нас 8 постов, свой шиномонтаж и зона ожидания. Но правило осталось тем же — никаких сюрпризов в чеке.</p>
+    </div>
+    <div class="tl reveal">
+      <div><b>2014</b><span>Первый бокс на два поста</span></div>
+      <div><b>2018</b><span>Переезд на Моторную, 8 постов и шиномонтаж</span></div>
+      <div><b>2021</b><span>Фотоотчёт о ремонте в Telegram</span></div>
+      <div><b>2025</b><span>Онлайн-запись и смета до приезда</span></div>
+    </div>
+  </div>
+</section>
+
+<section class="dark">
+  <div class="wrap">
+    <div class="sec-head reveal"><div><span class="kicker">В цифрах</span><h2>«ТОРК» сегодня</h2></div></div>
+    <div class="nums reveal">
+      <div><b>12 000+</b><span>машин отремонтировали</span></div>
+      <div><b>8</b><span>постов и свой шиномонтаж</span></div>
+      <div><b>14</b><span>мастеров в команде</span></div>
+      <div><b>4,9 ★</b><span>средняя оценка</span></div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="sec-head reveal"><div><span class="kicker">Команда</span><h2>Мастера, которым доверяют</h2></div><p>У каждого мастера — своя специализация и опыт от 7 лет.</p></div>
+    <div class="team reveal">
+      <div class="mm"><span class="av">СК</span><div><b>Сергей</b><span>Двигатель и ГРМ · 15 лет опыта</span></div></div>
+      <div class="mm"><span class="av">АЛ</span><div><b>Андрей</b><span>Подвеска и развал-схождение · 11 лет</span></div></div>
+      <div class="mm"><span class="av">МИ</span><div><b>Михаил</b><span>Диагностика и электрика · 9 лет</span></div></div>
+      <div class="mm"><span class="av">РТ</span><div><b>Роман</b><span>Тормоза и ТО · 8 лет</span></div></div>
+      <div class="mm"><span class="av">ЕВ</span><div><b>Евгений</b><span>Кондиционеры · 7 лет</span></div></div>
+      <div class="mm"><span class="av">НО</span><div><b>Наталья</b><span>Администратор и сметы</span></div></div>
+    </div>
+  </div>
+</section>
+
+<section style="padding-top:0">
+  <div class="wrap">
+    <div class="sec-head reveal"><div><span class="kicker">Оборудование</span><h2>Работаем на профессиональном</h2></div></div>
+    <div class="eq reveal"><span>3D-стенд развал-схождения</span><span>Дилерские сканеры диагностики</span><span>Станция заправки кондиционеров</span>
+      <span>Балансировочный станок</span><span>Подъёмники до 4 тонн</span><span>Эндоскоп для двигателя</span><span>Стенд промывки форсунок</span></div>
+  </div>
+</section>
+
+<section style="padding-top:0">
+  <div class="wrap"><div class="guar reveal">
+    <div><span class="kicker">Гарантия</span><h2 style="margin-bottom:22px">Гарантия на работы — письменно</h2>
+      <ul><li>12 месяцев или 20 000 км на работы</li><li>Гарантия на запчасти, которые покупаем мы</li><li>Старые детали отдаём вам</li><li>Заказ-наряд с подписью мастера</li></ul></div>
+    <div class="shield">12<small>месяцев гарантии</small></div>
+  </div></div>
+</section>
+
+<div id="foot"></div>
+<script src="assets/app.js"></script>
+</body>
+</html>

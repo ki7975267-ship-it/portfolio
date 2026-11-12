@@ -1,0 +1,147 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Автосервис «ТОРК» — ремонт авто без сюрпризов в чеке</title>
+<meta name="description" content="Автосервис полного цикла: ТО, диагностика, тормоза, подвеска, двигатель. Цена до начала работ, фотоотчёт в Telegram, гарантия 12 месяцев.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Russo+One&family=Inter+Tight:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/style.css">
+<style>
+.hero{background:var(--ink);color:#fff;padding:70px 0 90px;position:relative;overflow:hidden}
+.hero::before{content:"";position:absolute;inset:0;background:repeating-linear-gradient(135deg,rgba(255,255,255,.025) 0 2px,transparent 2px 22px)}
+.hero-grid{position:relative;display:grid;grid-template-columns:1.1fr .9fr;gap:60px;align-items:center}
+.badge{display:inline-flex;gap:10px;align-items:center;padding:8px 14px;border-radius:999px;background:rgba(255,255,255,.07);font-size:14px;font-weight:600}
+.badge i{width:8px;height:8px;border-radius:50%;background:var(--green);box-shadow:0 0 0 4px rgba(47,179,106,.25)}
+.hero h1{font-size:clamp(40px,5.6vw,72px);margin:22px 0 22px}
+.hero h1 em{font-style:normal;color:var(--yellow)}
+.hero .lead{font-size:19px;color:rgba(255,255,255,.7);max-width:540px;margin-bottom:34px}
+.hero .acts{display:flex;gap:12px;flex-wrap:wrap}
+.check{background:#fff;color:var(--ink);border-radius:22px;padding:26px;box-shadow:0 40px 80px -30px rgba(0,0,0,.7);transform:rotate(1.5deg);position:relative;font-size:15px}
+.check::after{content:"";position:absolute;left:0;right:0;bottom:-10px;height:12px;background:radial-gradient(circle at 10px -2px,transparent 8px,#fff 8.5px) 0 0/20px 12px repeat-x}
+.check .hd{display:flex;justify-content:space-between;align-items:start;border-bottom:1.5px dashed var(--line);padding-bottom:14px;margin-bottom:10px}
+.check .hd b{display:block;font-family:var(--head);font-size:20px;font-weight:400}
+.check .hd span{font-size:13px;color:var(--muted)}
+.ln{display:flex;justify-content:space-between;gap:16px;padding:7px 0}
+.ln span{color:var(--muted)}.ln.part span{padding-left:14px}
+.tot{display:flex;justify-content:space-between;border-top:1.5px dashed var(--line);margin-top:10px;padding-top:14px;font-family:var(--head);font-size:24px}
+.stamp{position:absolute;left:50%;translate:-45% 0;bottom:58px;border:3px solid var(--green);color:var(--green);border-radius:12px;padding:6px 12px;font-weight:800;font-size:13px;
+  transform:rotate(-10deg);text-transform:uppercase;letter-spacing:.06em;background:rgba(255,255,255,.85)}
+.fixed{margin-top:12px;font-size:12.5px;color:var(--muted);display:flex;gap:6px;align-items:center}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);background:var(--card);border-radius:22px;margin-top:-46px;position:relative;box-shadow:0 20px 50px -30px rgba(0,0,0,.3)}
+.stats div{padding:26px 28px}.stats div+div{border-left:1px solid var(--line)}
+.stats b{display:block;font-family:var(--head);font-size:34px;font-weight:400}.stats span{color:var(--muted);font-size:15px}
+.svc{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+.svc a{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:22px;display:flex;flex-direction:column;gap:14px;transition:.2s}
+.svc a:hover{border-color:var(--ink);transform:translateY(-3px)}
+.svc b{font-size:18px;line-height:1.25}.svc span{color:var(--muted);font-size:14px;margin-top:auto}
+.svc span strong{color:var(--ink)}
+.why{display:grid;grid-template-columns:repeat(4,1fr);gap:28px}
+.why div h3{font-family:var(--sans);font-weight:700;font-size:19px;margin:18px 0 8px}
+.why div p{color:rgba(255,255,255,.62);font-size:15px}
+.steps{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;counter-reset:s}
+.steps div{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:26px;counter-increment:s}
+.steps div::before{content:counter(s);display:grid;place-items:center;width:40px;height:40px;border-radius:12px;background:var(--yellow);font-family:var(--head);margin-bottom:22px}
+.steps h3{font-family:var(--sans);font-weight:700;font-size:18px;margin-bottom:6px}.steps p{color:var(--muted);font-size:15px}
+.revs{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.rev{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:26px}
+.rev .st{color:#F2A900;letter-spacing:2px;margin-bottom:10px}.rev p{margin-bottom:18px}
+.rev .who{display:flex;gap:12px;align-items:center;font-size:14px;color:var(--muted)}.rev .who b{display:block;color:var(--ink);font-size:15px}
+.rev .av{width:42px;height:42px;border-radius:50%;background:var(--ink);color:var(--yellow);display:grid;place-items:center;font-weight:800}
+@media (max-width:1000px){.hero-grid{grid-template-columns:1fr}.check{max-width:460px}.svc{grid-template-columns:1fr 1fr}.why,.steps{grid-template-columns:1fr 1fr}.revs{grid-template-columns:1fr}
+  .stats{grid-template-columns:1fr 1fr}.stats div:nth-child(3){border-left:0}.stats div:nth-child(n+3){border-top:1px solid var(--line)}}
+@media (max-width:560px){.svc,.why,.steps{grid-template-columns:1fr}.stats div{padding:18px}.stats b{font-size:26px}.check{transform:none}}
+</style>
+</head>
+<body>
+<div id="top"></div>
+
+<section class="hero">
+  <div class="wrap hero-grid">
+    <div class="reveal">
+      <span class="badge"><i></i>Свободно 4 окна на завтра</span>
+      <h1>Ремонт авто <em>без сюрпризов</em> в чеке</h1>
+      <p class="lead">Называем цену до начала работ и не меняем её без вашего согласия. Фото и видео каждой замены присылаем в Telegram.</p>
+      <div class="acts"><a class="btn btn-y" href="booking.html">Записаться онлайн</a><a class="btn btn-o" href="services.html">Цены на услуги</a></div>
+    </div>
+    <div class="reveal">
+      <div class="check">
+        <div class="hd"><div><b>Заказ-наряд № 2417</b><span>Kia Rio · 2019 · 86 400 км</span></div><span>сегодня</span></div>
+        <div class="ln"><b>Диагностика ходовой</b><b>0 ₽</b></div>
+        <div class="ln"><b>Замена передних колодок</b><b>1 200 ₽</b></div>
+        <div class="ln part"><span>колодки, оригинал</span><span>3 450 ₽</span></div>
+        <div class="ln"><b>Замена масла и фильтра</b><b>900 ₽</b></div>
+        <div class="ln part"><span>масло 5W-30, 4 л + фильтр</span><span>3 600 ₽</span></div>
+        <div class="tot"><span>Итого</span><span>9 150 ₽</span></div>
+        <div class="fixed"><svg width="14" height="14" viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="10" rx="2" fill="none" stroke="currentColor" stroke-width="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3" fill="none" stroke="currentColor" stroke-width="2"/></svg>Цена зафиксирована в 10:40 — диагностика бесплатно при ремонте</div>
+        <div class="stamp">Согласовано ✓</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="wrap"><div class="stats reveal">
+  <div><b>4,9 ★</b><span>средняя оценка клиентов</span></div>
+  <div><b>12 мес</b><span>гарантия на работы</span></div>
+  <div><b>30 мин</b><span>компьютерная диагностика</span></div>
+  <div><b>8 постов</b><span>без очередей и ожидания</span></div>
+</div></div>
+
+<section>
+  <div class="wrap">
+    <div class="sec-head reveal"><div><span class="kicker">Услуги</span><h2>Чем можем помочь</h2></div><p>Полный прайс с временем работ — на странице «Услуги и цены». Запчасти — оригинал или проверенные аналоги на выбор.</p></div>
+    <div class="svc" id="svc"></div>
+  </div>
+</section>
+
+<section class="dark">
+  <div class="wrap">
+    <div class="sec-head reveal"><div><span class="kicker">Почему нам доверяют</span><h2>Честно, быстро, с отчётом</h2></div></div>
+    <div class="why reveal">
+      <div><div class="ic"><svg viewBox="0 0 24 24" style="color:#FFC531"><rect x="5" y="11" width="14" height="10" rx="2" fill="none" stroke="currentColor" stroke-width="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3" fill="none" stroke="currentColor" stroke-width="2"/></svg></div><h3>Цена не растёт</h3><p>Смету согласуем до ремонта. Нашли что-то ещё — сначала звоним вам.</p></div>
+      <div><div class="ic"><svg viewBox="0 0 24 24" style="color:#FFC531"><rect x="3" y="6" width="18" height="13" rx="2" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="12.5" r="3.5" fill="none" stroke="currentColor" stroke-width="2"/><path d="M8 6l1.5-2h5L16 6" fill="none" stroke="currentColor" stroke-width="2"/></svg></div><h3>Фотоотчёт</h3><p>Присылаем фото старых и новых деталей в Telegram — видно, за что вы платите.</p></div>
+      <div><div class="ic"><svg viewBox="0 0 24 24" style="color:#FFC531"><path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M8.5 12l2.5 2.5L16 9.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></div><h3>Гарантия 12 месяцев</h3><p>На все работы и запчасти, которые покупаем сами. Без мелкого шрифта.</p></div>
+      <div><div class="ic"><svg viewBox="0 0 24 24" style="color:#FFC531"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="2"/><path d="M12 7v5l3 2" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></div><h3>Точно ко времени</h3><p>Онлайн-запись на конкретное время. Ждать можно в зоне с кофе и Wi-Fi.</p></div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="sec-head reveal"><div><span class="kicker">Как всё проходит</span><h2>4 шага до исправной машины</h2></div></div>
+    <div class="steps reveal">
+      <div><h3>Запись</h3><p>Онлайн за минуту или по телефону — на удобное время.</p></div>
+      <div><h3>Диагностика и смета</h3><p>Показываем, что нужно сделать, и называем точную цену.</p></div>
+      <div><h3>Ремонт с фотоотчётом</h3><p>Работаем только по согласованной смете, присылаем фото.</p></div>
+      <div><h3>Выдача и гарантия</h3><p>Отдаём старые детали и заказ-наряд с гарантией.</p></div>
+    </div>
+  </div>
+</section>
+
+<section style="padding-top:0">
+  <div class="wrap">
+    <div class="sec-head reveal"><div><span class="kicker">Отзывы</span><h2>Что говорят клиенты</h2></div></div>
+    <div class="revs reveal">
+      <div class="rev"><div class="st">★★★★★</div><p>Приехал на замену колодок, сказали, что диски ещё походят. Редко где так честно.</p><div class="who"><span class="av">Д</span><div><b>Дмитрий</b>Skoda Octavia</div></div></div>
+      <div class="rev"><div class="st">★★★★★</div><p>Фотоотчёт в Telegram — это лучшее. Видела каждую деталь, которую поменяли.</p><div class="who"><span class="av">О</span><div><b>Ольга</b>Hyundai Solaris</div></div></div>
+      <div class="rev"><div class="st">★★★★★</div><p>Записался онлайн на 8 утра, в 9:30 уже уехал. Цена совпала со сметой до рубля.</p><div class="who"><span class="av">А</span><div><b>Алексей</b>Toyota Camry</div></div></div>
+    </div>
+  </div>
+</section>
+
+<section style="padding-top:0">
+  <div class="wrap"><div class="cta-band reveal">
+    <div><h2>Запишитесь онлайн за минуту</h2><p>Выберите услугу, дату и время — пришлём подтверждение и смету.</p></div>
+    <a class="btn btn-d" href="booking.html">Выбрать время</a>
+  </div></div>
+</section>
+
+<div id="foot"></div>
+<script src="assets/app.js"></script>
+<script>
+document.getElementById('svc').innerHTML = CATS.map(([k, t, items]) => `<a href="services.html#${k}">
+  <div class="ic">${icon(k)}</div><b>${t}</b><span>от <strong>${rub(Math.min(...items.map((i) => i[2])))}</strong> · ${items.length} услуг${items.length < 5 ? 'и' : ''}</span></a>`).join('');
+</script>
+</body>
+</html>

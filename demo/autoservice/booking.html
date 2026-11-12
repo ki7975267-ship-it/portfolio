@@ -1,0 +1,151 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Онлайн-запись — автосервис «ТОРК»</title>
+<meta name="description" content="Запишитесь в автосервис онлайн: выберите услуги, дату и время. Предварительная смета сразу.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Russo+One&family=Inter+Tight:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/style.css">
+<style>
+.bk{display:grid;grid-template-columns:1fr 360px;gap:24px;align-items:start}
+.step{background:var(--card);border:1px solid var(--line);border-radius:22px;padding:26px;margin-bottom:16px}
+.step h2{font-size:22px;display:flex;align-items:center;gap:12px;margin-bottom:18px}
+.step h2 i{font-style:normal;width:34px;height:34px;border-radius:10px;background:var(--yellow);display:grid;place-items:center;font-size:16px}
+.row3{display:grid;grid-template-columns:1fr 1fr 120px;gap:12px}
+.svcs{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.svcs label{display:flex;gap:12px;align-items:center;border:1.5px solid var(--line);border-radius:14px;padding:12px 14px;cursor:pointer;transition:.15s}
+.svcs label:has(input:checked){border-color:var(--ink);background:#FFFBEA}
+.svcs input{width:20px;height:20px;accent-color:#121417;flex:none}
+.svcs b{display:block;font-size:15px;line-height:1.25}.svcs span{font-size:13px;color:var(--muted)}
+.days{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}
+.days button,.slots button{border:1.5px solid var(--line);background:#fff;border-radius:12px;cursor:pointer;font-weight:700}
+.days button{width:74px;padding:8px 0;font-size:13px;color:var(--muted);line-height:1.3}
+.days button b{display:block;font-size:18px;color:var(--ink)}
+.days button.on{background:var(--ink);border-color:var(--ink);color:rgba(255,255,255,.7)}.days button.on b{color:#fff}
+.slots{display:grid;grid-template-columns:repeat(6,1fr);gap:8px}
+.slots button{height:44px}
+.slots button:disabled{color:#B9BBBF;background:#F3F2EE;border-color:transparent;text-decoration:line-through;cursor:default}
+.slots button.on{background:var(--yellow);border-color:var(--yellow)}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px}
+.opt{display:flex;gap:10px;align-items:center;margin-top:12px;font-size:15px;cursor:pointer}
+.opt input{width:20px;height:20px;accent-color:#121417}
+.sum{position:sticky;top:96px;background:var(--ink);color:#fff;border-radius:22px;padding:26px}
+.sum h3{font-size:22px;margin-bottom:16px}
+.sum .it{display:flex;justify-content:space-between;gap:12px;padding:8px 0;border-bottom:1px solid rgba(255,255,255,.08);font-size:14px}
+.sum .it span{color:rgba(255,255,255,.55)}
+.sum .empty{color:rgba(255,255,255,.45);font-size:14px;padding:6px 0}
+.sum .tot{display:flex;justify-content:space-between;align-items:baseline;margin:18px 0 6px;font-family:var(--head);font-size:26px}
+.sum small{display:block;color:rgba(255,255,255,.5);font-size:12.5px;margin-bottom:18px}
+.sum .btn{width:100%}
+.err{color:#FF8A8A;font-size:13px;margin-top:10px;min-height:18px}
+.done{text-align:center;padding:40px 20px}
+.done .tick{width:84px;height:84px;border-radius:50%;background:var(--green);display:grid;place-items:center;margin:0 auto 18px}
+.done h2{margin-bottom:10px}.done p{color:var(--muted);max-width:480px;margin:0 auto 22px}
+@media (max-width:1000px){.bk{grid-template-columns:1fr}.sum{position:static}}
+@media (max-width:640px){.row3,.two,.svcs{grid-template-columns:1fr}.slots{grid-template-columns:repeat(3,1fr)}.days button{width:calc(25% - 6px)}}
+</style>
+</head>
+<body>
+<div id="top"></div>
+<div class="page-head"><div class="wrap">
+  <div class="crumbs"><a href="index.html">Главная</a> / Онлайн-запись</div>
+  <h1>Онлайн-запись</h1>
+  <p>Выберите услуги, дату и время — предварительная смета считается сразу. Подтверждение придёт по SMS или в Telegram.</p>
+</div></div>
+
+<section style="padding-top:36px">
+  <div class="wrap">
+    <div class="bk" id="bk">
+      <div>
+        <div class="step"><h2><i>1</i>Автомобиль</h2>
+          <div class="row3">
+            <div class="field"><label for="brand">Марка</label><select id="brand"><option value="">Выберите</option></select></div>
+            <div class="field"><label for="model">Модель</label><input id="model" placeholder="например, Rio"></div>
+            <div class="field"><label for="year">Год</label><input id="year" inputmode="numeric" maxlength="4" placeholder="2019"></div>
+          </div></div>
+        <div class="step"><h2><i>2</i>Услуги</h2><div class="svcs" id="svcs"></div></div>
+        <div class="step"><h2><i>3</i>Дата и время</h2><div class="days" id="days"></div><div class="slots" id="slots"></div></div>
+        <div class="step"><h2><i>4</i>Контакты</h2>
+          <div class="two">
+            <div class="field"><label for="name">Имя</label><input id="name" autocomplete="name" placeholder="Как к вам обращаться"></div>
+            <div class="field"><label for="phone">Телефон</label><input id="phone" type="tel" autocomplete="tel" placeholder="+7 (___) ___-__-__"></div>
+          </div>
+          <div class="field"><label for="note">Что беспокоит (необязательно)</label><textarea id="note" rows="3" placeholder="Например: стук спереди справа на неровностях"></textarea></div>
+          <label class="opt"><input type="checkbox" id="tg" checked>Присылать фотоотчёт в Telegram</label>
+        </div>
+      </div>
+      <aside class="sum">
+        <h3>Ваша запись</h3>
+        <div id="sumList"></div>
+        <div class="tot"><span>Смета</span><span id="sumTot">0 ₽</span></div>
+        <small>Работы, без учёта запчастей. Точную сумму зафиксируем после осмотра.</small>
+        <button class="btn btn-y" id="go">Записаться</button>
+        <div class="err" id="err"></div>
+      </aside>
+    </div>
+  </div>
+</section>
+
+<div id="foot"></div>
+<script src="assets/app.js"></script>
+<script>
+const $ = (id) => document.getElementById(id);
+const BRANDS = ['Kia', 'Hyundai', 'Toyota', 'Lada', 'Volkswagen', 'Skoda', 'Renault', 'Nissan', 'Mazda', 'Mitsubishi', 'BMW', 'Mercedes-Benz', 'Haval', 'Chery', 'Geely', 'Другая'];
+$('brand').innerHTML += BRANDS.map((b) => `<option>${b}</option>`).join('');
+const ALL = CATS.flatMap(([k, t, items]) => items.map(([n, tm, p]) => ({ k, n, tm, p })));
+const POPULAR = ['Замена масла и масляного фильтра', 'Компьютерная диагностика', 'Замена передних колодок', 'Диагностика ходовой',
+  'Сезонная переобувка (4 колеса)', 'Заправка кондиционера', 'Развал-схождение', 'ТО по регламенту (без запчастей)'];
+const pre = new URLSearchParams(location.search).get('service');
+const list = pre && !POPULAR.includes(pre) && ALL.some((s) => s.n === pre) ? [pre, ...POPULAR.slice(0, 7)] : POPULAR;
+$('svcs').innerHTML = list.map((n) => { const s = ALL.find((x) => x.n === n);
+  return `<label><input type="checkbox" value="${n}" ${n === pre ? 'checked' : ''}><div><b>${n}</b><span>${s.tm} · от ${rub(s.p)}</span></div></label>`; }).join('');
+
+// дни и время
+const W = ['Вс', 'Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб'];
+const M = ['января', 'февраля', 'марта', 'апреля', 'мая', 'июня', 'июля', 'августа', 'сентября', 'октября', 'ноября', 'декабря'];
+const days = Array.from({ length: 8 }, (_, i) => { const d = new Date(); d.setDate(d.getDate() + i + 1); return d; });
+let day = 0, slot = null;
+const busy = (di, t) => ((di * 7 + t.length * 3 + parseInt(t)) % 5) === 0;   // демо: часть времени занята
+function drawDays() {
+  $('days').innerHTML = days.map((d, i) => `<button data-d="${i}" class="${i === day ? 'on' : ''}">${i === 0 ? 'Завтра' : W[d.getDay()]}<b>${d.getDate()}</b></button>`).join('');
+  const end = days[day].getDay() % 6 === 0 ? 18 : 20;
+  const times = []; for (let h = 9; h <= end; h++) times.push(`${h}:00`);
+  $('slots').innerHTML = times.map((t) => `<button data-t="${t}" ${busy(day, t) ? 'disabled' : ''} class="${t === slot ? 'on' : ''}">${t}</button>`).join('');
+}
+$('days').onclick = (e) => { const b = e.target.closest('button'); if (!b) return; day = +b.dataset.d; slot = null; drawDays(); drawSum(); };
+$('slots').onclick = (e) => { const b = e.target.closest('button'); if (!b || b.disabled) return; slot = b.dataset.t; drawDays(); drawSum(); };
+
+function chosen() { return [...document.querySelectorAll('#svcs input:checked')].map((i) => ALL.find((s) => s.n === i.value)); }
+function drawSum() {
+  const s = chosen(), car = [$('brand').value, $('model').value.trim(), $('year').value.trim()].filter(Boolean).join(' ');
+  const d = days[day];
+  $('sumList').innerHTML = (car ? `<div class="it"><span>Авто</span>${car}</div>` : '')
+    + (slot ? `<div class="it"><span>Когда</span>${d.getDate()} ${M[d.getMonth()]}, ${slot}</div>` : '')
+    + (s.length ? s.map((x) => `<div class="it"><span>${x.n}</span>${rub(x.p)}</div>`).join('') : '<div class="empty">Выберите хотя бы одну услугу</div>');
+  $('sumTot').textContent = rub(s.reduce((a, x) => a + x.p, 0));
+}
+['brand', 'model', 'year'].forEach((id) => $(id).addEventListener('input', drawSum));
+$('svcs').addEventListener('change', drawSum);
+
+$('go').onclick = () => {
+  const errs = [];
+  if (!$('brand').value) errs.push('марку');
+  if (!chosen().length) errs.push('услугу');
+  if (!slot) errs.push('время');
+  if (!$('name').value.trim()) { errs.push('имя'); $('name').classList.add('bad'); }
+  if (!phoneOk($('phone'))) { errs.push('телефон'); $('phone').classList.add('bad'); }
+  if (errs.length) { $('err').textContent = 'Укажите: ' + errs.join(', '); return; }
+  const d = days[day], num = 2400 + Math.floor(Math.random() * 600);
+  $('bk').outerHTML = `<div class="step done"><div class="tick"><svg width="40" height="40" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5" stroke="#fff" stroke-width="2.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+    <h2>Вы записаны, ${$('name').value.trim()}!</h2>
+    <p>Заявка № ${num}: ${d.getDate()} ${M[d.getMonth()]} в ${slot}. Мастер перезвонит в течение 15 минут, чтобы подтвердить запись${$('tg').checked ? ', а фотоотчёт придёт в Telegram' : ''}.</p>
+    <a class="btn btn-d" href="index.html">На главную</a></div>`;
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+};
+$('name').addEventListener('input', () => $('name').classList.remove('bad'));
+drawDays(); drawSum();
+</script>
+</body>
+</html>
