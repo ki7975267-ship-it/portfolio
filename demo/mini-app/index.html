@@ -1,0 +1,353 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<title>Тесто — доставка пиццы</title>
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+<script src="menu.js"></script>
+<style>
+:root{
+  /* цвета берутся из темы Telegram пользователя; запасные — для открытия в обычном браузере */
+  --bg:var(--tg-theme-bg-color,#ffffff); --bg2:var(--tg-theme-secondary-bg-color,#f2f3f5);
+  --text:var(--tg-theme-text-color,#111418); --hint:var(--tg-theme-hint-color,#8a9099);
+  --brand:#F2542D; --brand-2:#FF7A4D; --ok:#22A06B; --line:rgba(127,127,127,.18);
+  --c-pizza:#FFE9DE; --c-snacks:#FFF2D2; --c-drinks:#DFF1FF; --c-dessert:#FCE4F1;
+}
+.dark{--bg:#17212B; --bg2:#0E1621; --text:#F5F5F5; --hint:#7D8B99; --line:rgba(255,255,255,.08);
+  --c-pizza:#3A2A25; --c-snacks:#3A3424; --c-drinks:#1F3243; --c-dessert:#3A2533}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{background:var(--bg2)}
+body{font:15px/1.4 -apple-system,'Segoe UI',Roboto,system-ui,sans-serif;color:var(--text);min-height:100vh}
+button,input,textarea{font:inherit;color:inherit;border:0;background:none;outline:none}
+button{cursor:pointer}
+.view{display:none;padding-bottom:96px}.view.on{display:block;animation:in .25s ease}
+@keyframes in{from{opacity:0;transform:translateY(8px)}}
+
+/* меню */
+.hello{background:var(--bg);padding:18px 16px 14px}
+.hello h1{font-size:22px;line-height:1.2}
+.hello p{color:var(--hint);font-size:14px;margin-top:4px;display:flex;gap:6px;align-items:center}
+.hello p i{width:7px;height:7px;border-radius:50%;background:var(--ok)}
+.promo{margin:12px 16px 0;border-radius:18px;padding:14px 16px;color:#fff;display:flex;gap:12px;align-items:center;
+  background:linear-gradient(120deg,#F2542D,#FF8A3D);box-shadow:0 10px 24px -14px rgba(242,84,45,.9)}
+.promo b{display:block;font-size:16px}.promo span{font-size:13px;opacity:.9}
+.promo code{font:700 13px/1 inherit;background:rgba(255,255,255,.22);padding:6px 9px;border-radius:8px;margin-left:auto;letter-spacing:.04em}
+.cats{position:sticky;top:0;z-index:5;background:var(--bg);display:flex;gap:6px;overflow-x:auto;padding:12px 16px;scrollbar-width:none;
+  border-bottom:1px solid var(--line)}
+.cats::-webkit-scrollbar{display:none}
+.cats button{flex:none;height:34px;padding:0 14px;border-radius:999px;background:var(--bg2);font-weight:600;font-size:14px;color:var(--hint);transition:.2s}
+.cats button.on{background:var(--text);color:var(--bg)}
+section{background:var(--bg);padding:16px 16px 6px;margin-bottom:8px}
+section h2{font-size:19px;margin-bottom:12px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.card{background:var(--bg2);border-radius:18px;padding:10px;display:flex;flex-direction:column;position:relative}
+.pic{height:96px;border-radius:14px;display:grid;place-items:center;font-size:52px;margin-bottom:8px}
+.tag{position:absolute;top:16px;left:16px;font-size:11px;font-weight:700;padding:3px 8px;border-radius:999px;background:var(--bg);color:var(--brand)}
+.card b{font-size:14.5px;line-height:1.25}
+.card .d{font-size:12px;color:var(--hint);margin:3px 0 2px;line-height:1.3;flex:1}
+.card .s{font-size:12px;color:var(--hint)}
+.buy{margin-top:8px;height:36px;border-radius:12px;background:var(--bg);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:15px;gap:4px}
+.buy.add{color:var(--text)}
+.buy.add:active{transform:scale(.97)}
+.step{display:flex;align-items:center;justify-content:space-between;background:var(--brand);color:#fff;padding:0 4px}
+.step button{width:30px;height:30px;border-radius:10px;font-size:20px;font-weight:600;color:#fff;display:grid;place-items:center}
+
+/* корзина */
+.head{background:var(--bg);padding:16px;display:flex;justify-content:space-between;align-items:baseline}
+.head h1{font-size:22px}.head button{color:var(--brand);font-weight:600;font-size:14px}
+.box{background:var(--bg);margin-top:8px;padding:6px 16px}
+.box h3{font-size:16px;padding:10px 0 4px}
+.row{display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--line)}
+.row:last-child{border-bottom:0}
+.row .pic{width:52px;height:52px;font-size:28px;margin:0;flex:none;border-radius:14px}
+.row .nm{flex:1;min-width:0}.row .nm b{display:block;font-size:15px}.row .nm span{font-size:13px;color:var(--hint)}
+.mini{display:flex;align-items:center;gap:2px;background:var(--bg2);border-radius:12px;height:34px}
+.mini button{width:32px;height:34px;font-size:18px;font-weight:600;color:var(--brand)}
+.mini span{min-width:18px;text-align:center;font-weight:700}
+.ups{display:flex;gap:8px;overflow-x:auto;padding:4px 0 12px;scrollbar-width:none}
+.ups::-webkit-scrollbar{display:none}
+.up{flex:none;width:118px;background:var(--bg2);border-radius:14px;padding:8px;font-size:13px}
+.up .pic{height:54px;font-size:30px;margin-bottom:6px;border-radius:10px}
+.up b{display:block;font-size:13px;line-height:1.2;height:32px;overflow:hidden}
+.up button{margin-top:6px;width:100%;height:28px;border-radius:9px;background:var(--bg);font-weight:700;font-size:13px}
+.seg{display:flex;background:var(--bg2);border-radius:12px;padding:3px;margin:6px 0 12px}
+.seg button{flex:1;height:36px;border-radius:10px;font-weight:600;color:var(--hint)}
+.seg button.on{background:var(--bg);color:var(--text);box-shadow:0 1px 3px rgba(0,0,0,.12)}
+.field{display:block;background:var(--bg2);border-radius:12px;padding:8px 12px;margin-bottom:10px}
+.field small{display:block;font-size:12px;color:var(--hint)}
+.field input,.field textarea{width:100%;font-size:15px;resize:none}
+.field.bad{box-shadow:inset 0 0 0 1.5px #E5484D}
+.times{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px}
+.times button{height:34px;padding:0 12px;border-radius:10px;background:var(--bg2);font-size:14px;font-weight:600}
+.times button.on{background:var(--text);color:var(--bg)}
+.pickup{background:var(--bg2);border-radius:12px;padding:12px;font-size:14px;margin-bottom:12px}
+.code{display:flex;gap:8px;margin-bottom:12px}
+.code .field{flex:1;margin:0}
+.code button{padding:0 16px;border-radius:12px;background:var(--bg2);font-weight:700;color:var(--brand)}
+.code-ok{color:var(--ok);font-size:13px;font-weight:600;margin:-6px 0 10px}
+.sum{padding:8px 0 12px}.sum div{display:flex;justify-content:space-between;padding:4px 0;color:var(--hint)}
+.sum div b{color:var(--text);font-weight:600}
+.sum .tot{border-top:1px solid var(--line);margin-top:6px;padding-top:10px;color:var(--text);font-size:18px;font-weight:700}
+.sum .tot b{font-weight:800}
+.empty{text-align:center;padding:60px 20px;color:var(--hint)}.empty div{font-size:56px;margin-bottom:8px}
+
+/* заказ принят */
+.done{background:var(--bg);min-height:100vh;padding:48px 20px;text-align:center}
+.done .ok{width:84px;height:84px;border-radius:50%;background:rgba(34,160,107,.14);display:grid;place-items:center;margin:0 auto 18px;animation:pop .5s both}
+@keyframes pop{0%{transform:scale(.5);opacity:0}70%{transform:scale(1.08)}100%{transform:none;opacity:1}}
+.done h1{font-size:24px}.done p{color:var(--hint);margin-top:6px}
+.eta{margin:22px 0;background:var(--bg2);border-radius:18px;padding:16px;text-align:left}
+.eta b{font-size:28px;display:block}.eta span{color:var(--hint);font-size:13px}
+.track{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:14px}
+.track i{height:6px;border-radius:3px;background:var(--line)}.track i.on{background:var(--ok)}
+.track-l{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;font-size:12px;color:var(--hint);margin-top:6px}
+.track-l span:first-child{color:var(--ok);font-weight:600}
+.recap{text-align:left;font-size:14px;color:var(--hint)}
+
+/* своя «главная кнопка» — только вне Telegram (в Telegram используется нативная MainButton) */
+.mainbtn{position:fixed;left:12px;right:12px;bottom:12px;height:52px;border-radius:14px;background:var(--brand);color:#fff;
+  font-weight:700;font-size:16px;display:none;align-items:center;justify-content:center;gap:10px;z-index:20;
+  box-shadow:0 12px 26px -12px rgba(242,84,45,.9)}
+.mainbtn.on{display:flex}.mainbtn:disabled{background:#9aa0a6;box-shadow:none}
+.mainbtn em{font-style:normal;background:rgba(255,255,255,.22);border-radius:8px;padding:2px 8px;font-size:14px}
+.toast{position:fixed;left:50%;bottom:78px;translate:-50% 20px;background:rgba(20,20,20,.88);color:#fff;padding:9px 14px;border-radius:12px;
+  font-size:14px;opacity:0;transition:.25s;pointer-events:none;z-index:30;white-space:nowrap}
+.toast.on{opacity:1;translate:-50% 0}
+</style>
+</head>
+<body>
+
+<div class="view on" id="v-menu">
+  <div class="hello">
+    <h1 id="hi">Добрый вечер!</h1>
+    <p><i></i>Привезём за 35–45 минут · бесплатно от 1000 ₽</p>
+  </div>
+  <div class="promo"><div><b>−10% на первый заказ</b><span>введите промокод в корзине</span></div><code>ТЕСТО10</code></div>
+  <div style="height:12px;background:var(--bg)"></div>
+  <nav class="cats" id="cats"></nav>
+  <div id="sections"></div>
+</div>
+
+<div class="view" id="v-cart">
+  <div class="head"><h1>Корзина</h1><button id="clear">Очистить</button></div>
+  <div id="cartBody"></div>
+</div>
+
+<div class="view" id="v-done"><div class="done" id="doneBody"></div></div>
+
+<button class="mainbtn" id="main"></button>
+<div class="toast" id="toast"></div>
+
+<script>
+const CATS = [['pizza', 'Пицца'], ['snacks', 'Закуски'], ['drinks', 'Напитки'], ['dessert', 'Десерты']];
+const tg = window.Telegram && window.Telegram.WebApp;
+const inTG = !!(tg && tg.initData);                       // открыто внутри Telegram?
+const params = new URLSearchParams(location.search);
+if ((inTG && tg.colorScheme === 'dark') || params.get('theme') === 'dark') document.documentElement.classList.add('dark');
+
+const $ = (id) => document.getElementById(id);
+const rub = (n) => n.toLocaleString('ru-RU') + ' ₽';
+const byId = Object.fromEntries(MENU.map((p) => [p.id, p]));
+const state = { cart: {}, view: 'menu', mode: 'delivery', time: 'asap', promo: null };
+try { Object.assign(state.cart, JSON.parse(localStorage.getItem('testo.cart') || '{}')); } catch (e) {}
+const save = () => { try { localStorage.setItem('testo.cart', JSON.stringify(state.cart)); } catch (e) {} };
+const haptic = (t = 'light') => { try { inTG && tg.HapticFeedback.impactOccurred(t); } catch (e) {} };
+
+// ---------- приветствие ----------
+const user = inTG ? tg.initDataUnsafe.user : { first_name: params.get('name') || 'Олег' };
+const h = new Date().getHours();
+$('hi').textContent = `${h < 12 ? 'Доброе утро' : h < 18 ? 'Добрый день' : 'Добрый вечер'}, ${user?.first_name || 'друг'} 👋`;
+
+// ---------- меню ----------
+$('cats').innerHTML = CATS.map(([id, t], i) => `<button data-c="${id}" class="${i ? '' : 'on'}">${t}</button>`).join('');
+$('sections').innerHTML = CATS.map(([id, t]) => `<section id="s-${id}"><h2>${t}</h2><div class="grid">${
+  MENU.filter((p) => p.cat === id).map((p) => `<div class="card" data-id="${p.id}">
+    <div class="pic" style="background:var(--c-${p.cat})">${p.emoji}</div>${p.tag ? `<span class="tag">${p.tag}</span>` : ''}
+    <b>${p.name}</b><div class="d">${p.desc}</div><div class="s">${p.size}</div><div class="buyslot"></div></div>`).join('')
+}</div></section>`).join('');
+
+function drawBuy(id) {
+  const slot = document.querySelector(`.card[data-id="${id}"] .buyslot`);
+  const q = state.cart[id] || 0, p = byId[id];
+  slot.innerHTML = q
+    ? `<div class="buy step"><button data-a="-" data-id="${id}">−</button><span>${q} × ${rub(p.price)}</span><button data-a="+" data-id="${id}">+</button></div>`
+    : `<button class="buy add" data-a="+" data-id="${id}">${rub(p.price)}<span style="color:var(--brand);font-size:18px;margin-left:4px">+</span></button>`;
+}
+MENU.forEach((p) => drawBuy(p.id));
+
+function change(id, d) {
+  const q = Math.max(0, (state.cart[id] || 0) + d);
+  if (q) state.cart[id] = q; else delete state.cart[id];
+  save(); haptic(d > 0 ? 'light' : 'soft');
+  if (document.querySelector(`.card[data-id="${id}"]`)) drawBuy(id);
+  if (state.view === 'cart') { remember(); drawCart(); }
+  updateMain();
+}
+document.addEventListener('click', (e) => {
+  const b = e.target.closest('[data-a]');
+  if (b) change(b.dataset.id, b.dataset.a === '+' ? 1 : -1);
+});
+
+// категории: прокрутка к разделу и подсветка текущего
+$('cats').addEventListener('click', (e) => {
+  const b = e.target.closest('button'); if (!b) return;
+  const sec = $('s-' + b.dataset.c);
+  window.scrollTo({ top: sec.offsetTop - $('cats').offsetHeight + 1, behavior: 'smooth' });
+});
+const spy = () => {
+  const y = window.scrollY + $('cats').offsetHeight + 10;
+  let cur = CATS[0][0];
+  CATS.forEach(([id]) => { if ($('s-' + id).offsetTop <= y) cur = id; });
+  document.querySelectorAll('#cats button').forEach((b) => b.classList.toggle('on', b.dataset.c === cur));
+};
+window.addEventListener('scroll', () => state.view === 'menu' && spy(), { passive: true });
+
+// ---------- расчёт ----------
+function totals() {
+  const items = Object.entries(state.cart).map(([id, q]) => ({ ...byId[id], q }));
+  const goods = items.reduce((s, i) => s + i.price * i.q, 0);
+  const count = items.reduce((s, i) => s + i.q, 0);
+  const discount = state.promo ? Math.round(goods * SHOP.promo[state.promo] / 100) : 0;
+  const delivery = state.mode === 'pickup' || goods - discount >= SHOP.freeFrom || !goods ? 0 : SHOP.delivery;
+  return { items, goods, count, discount, delivery, total: goods - discount + delivery };
+}
+
+// ---------- корзина ----------
+function slots() {
+  const d = new Date(); d.setMinutes(d.getMinutes() + 60 - (d.getMinutes() % 30));
+  return [['asap', 'Как можно скорее'], ...[0, 1, 2].map((i) => {
+    const t = new Date(d.getTime() + i * 30 * 60000), s = t.toTimeString().slice(0, 5);
+    return [s, 'К ' + s];
+  })];
+}
+function drawCart() {
+  const t = totals();
+  $('clear').style.display = t.count ? '' : 'none';
+  if (!t.count) {
+    $('cartBody').innerHTML = `<div class="empty"><div>🛒</div>Корзина пуста — загляните в меню</div>`;
+    return;
+  }
+  const inCart = new Set(Object.keys(state.cart));
+  const ups = MENU.filter((p) => ['drinks', 'dessert', 'snacks'].includes(p.cat) && !inCart.has(p.id)).slice(0, 6);
+  $('cartBody').innerHTML = `
+  <div class="box">${t.items.map((i) => `<div class="row"><div class="pic" style="background:var(--c-${i.cat})">${i.emoji}</div>
+    <div class="nm"><b>${i.name}</b><span>${i.size} · ${rub(i.price)}</span></div>
+    <div class="mini"><button data-a="-" data-id="${i.id}">−</button><span>${i.q}</span><button data-a="+" data-id="${i.id}">+</button></div></div>`).join('')}</div>
+  ${ups.length ? `<div class="box"><h3>Добавить к заказу?</h3><div class="ups">${ups.map((p) => `<div class="up">
+    <div class="pic" style="background:var(--c-${p.cat})">${p.emoji}</div><b>${p.name}</b>
+    <button data-a="+" data-id="${p.id}">+ ${rub(p.price)}</button></div>`).join('')}</div></div>` : ''}
+  <div class="box">
+    <h3>Получение</h3>
+    <div class="seg" id="mode"><button data-m="delivery" class="${state.mode === 'delivery' ? 'on' : ''}">Доставка</button>
+      <button data-m="pickup" class="${state.mode === 'pickup' ? 'on' : ''}">Самовывоз</button></div>
+    ${state.mode === 'delivery'
+      ? `<label class="field" id="addrF"><small>Адрес</small><input id="addr" placeholder="Улица, дом, квартира" value="${state.addr || ''}"></label>`
+      : `<div class="pickup">📍 ${SHOP.pickup}</div>`}
+    <div class="times" id="times">${slots().map(([v, l]) => `<button data-t="${v}" class="${state.time === v ? 'on' : ''}">${l}</button>`).join('')}</div>
+    <label class="field"><small>Комментарий</small><textarea id="note" rows="1" placeholder="Домофон, этаж, без лука…">${state.note || ''}</textarea></label>
+  </div>
+  <div class="box">
+    <h3>Промокод</h3>
+    <div class="code"><label class="field"><input id="code" placeholder="Например, ТЕСТО10" value="${state.promo || ''}"></label><button id="apply">Применить</button></div>
+    ${state.promo ? `<div class="code-ok">✓ Скидка ${SHOP.promo[state.promo]}% применена</div>` : ''}
+    <div class="sum">
+      <div>Товары (${t.count})<b>${rub(t.goods)}</b></div>
+      ${t.discount ? `<div>Скидка по промокоду<b style="color:var(--ok)">−${rub(t.discount)}</b></div>` : ''}
+      <div>Доставка<b>${t.delivery ? rub(t.delivery) : 'бесплатно'}</b></div>
+      ${t.delivery ? `<div style="font-size:13px">ещё ${rub(SHOP.freeFrom - t.goods + t.discount)} до бесплатной доставки</div>` : ''}
+      <div class="tot">Итого<b>${rub(t.total)}</b></div>
+    </div>
+  </div>`;
+}
+$('cartBody').addEventListener('click', (e) => {
+  const m = e.target.closest('[data-m]'), tm = e.target.closest('[data-t]');
+  if (m) { remember(); state.mode = m.dataset.m; drawCart(); updateMain(); }
+  if (tm) { remember(); state.time = tm.dataset.t; drawCart(); }
+  if (e.target.id === 'apply') {
+    remember();
+    const code = $('code').value.trim().toUpperCase();
+    if (SHOP.promo[code]) { state.promo = code; haptic('medium'); toast('Промокод применён 🎉'); }
+    else { state.promo = null; toast('Такого промокода нет'); }
+    drawCart(); updateMain();
+  }
+});
+const remember = () => { if ($('addr')) state.addr = $('addr').value; if ($('note')) state.note = $('note').value; };
+$('clear').onclick = () => { state.cart = {}; save(); MENU.forEach((p) => drawBuy(p.id)); drawCart(); updateMain(); };
+
+// ---------- переходы между экранами ----------
+function show(view) {
+  state.view = view;
+  document.querySelectorAll('.view').forEach((v) => v.classList.toggle('on', v.id === 'v-' + view));
+  window.scrollTo(0, 0);
+  if (view === 'cart') drawCart();
+  if (inTG) view === 'menu' ? tg.BackButton.hide() : tg.BackButton.show();
+  updateMain();
+}
+
+// ---------- главная кнопка (MainButton Telegram или своя) ----------
+function updateMain() {
+  const t = totals();
+  let text = '', visible = false, enabled = true;
+  if (state.view === 'menu' && t.count) { text = `Корзина · ${rub(t.total)}`; visible = true; }
+  if (state.view === 'cart' && t.count) {
+    visible = true;
+    if (t.goods < SHOP.minOrder) { text = `Минимальный заказ ${rub(SHOP.minOrder)}`; enabled = false; }
+    else text = `Оформить заказ · ${rub(t.total)}`;
+  }
+  if (inTG) {
+    const mb = tg.MainButton;
+    mb.setParams({ text, color: enabled ? '#F2542D' : '#9AA0A6', text_color: '#FFFFFF', is_active: enabled });
+    visible ? mb.show() : mb.hide();
+  } else {
+    const b = $('main');
+    b.classList.toggle('on', visible);
+    b.disabled = !enabled;
+    b.innerHTML = state.view === 'menu' && t.count ? `Корзина <em>${t.count}</em> ${rub(t.total)}` : text;
+  }
+}
+function onMain() {
+  if (state.view === 'menu') return show('cart');
+  if (state.view === 'cart') return checkout();
+}
+$('main').onclick = onMain;
+if (inTG) {
+  tg.ready(); tg.expand();
+  tg.MainButton.onClick(onMain);
+  tg.BackButton.onClick(() => show('menu'));
+}
+
+// ---------- оформление ----------
+function checkout() {
+  remember();
+  if (state.mode === 'delivery' && !(state.addr || '').trim()) {
+    $('addrF').classList.add('bad'); $('addr').focus(); haptic('heavy'); toast('Укажите адрес доставки');
+    return;
+  }
+  const t = totals();
+  const order = { items: t.items.map((i) => ({ id: i.id, q: i.q })), mode: state.mode, addr: state.addr || '',
+                  time: state.time, note: state.note || '', promo: state.promo, total: t.total };
+  if (inTG) { tg.sendData(JSON.stringify(order)); return; }   // бот получит заказ и пришлёт подтверждение в чат
+  const num = 1000 + Math.floor(Math.random() * 9000);
+  const eta = state.time === 'asap' ? new Date(Date.now() + 40 * 60000).toTimeString().slice(0, 5) : state.time;
+  $('doneBody').innerHTML = `<div class="ok"><svg width="40" height="40" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5" stroke="#22A06B" stroke-width="2.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+    <h1>Заказ №${num} принят!</h1><p>Подтверждение и чек пришлём в чат с ботом</p>
+    <div class="eta"><span>${state.mode === 'pickup' ? 'Будет готов к' : 'Привезём к'}</span><b>${eta}</b>
+      <div class="track"><i class="on"></i><i></i><i></i></div>
+      <div class="track-l"><span>Принят</span><span>Готовим</span><span>${state.mode === 'pickup' ? 'Можно забирать' : 'В пути'}</span></div></div>
+    <div class="recap">${t.items.map((i) => `${i.emoji} ${i.name} × ${i.q}`).join('<br>')}<br><br><b style="color:var(--text)">Итого: ${rub(t.total)}</b></div>`;
+  state.cart = {}; state.promo = null; save(); MENU.forEach((p) => drawBuy(p.id));
+  haptic('heavy');
+  state.view = 'done';
+  document.querySelectorAll('.view').forEach((v) => v.classList.toggle('on', v.id === 'v-done'));
+  const b = $('main'); b.classList.add('on'); b.disabled = false; b.textContent = 'Вернуться в меню';
+  b.onclick = () => { b.onclick = onMain; show('menu'); };
+}
+
+let tt;
+function toast(text) { const el = $('toast'); el.textContent = text; el.classList.add('on'); clearTimeout(tt); tt = setTimeout(() => el.classList.remove('on'), 1800); }
+
+updateMain();
+</script>
+</body>
+</html>

@@ -1,0 +1,440 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Линия — кухни на заказ. Расчёт стоимости за 1 минуту</title>
+<meta name="description" content="Ответьте на 5 вопросов и узнайте стоимость кухни на заказ. 3D-проект бесплатно, гарантия 5 лет.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;700&family=Golos+Text:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --stone:#F1EEE7; --paper:#FBFAF7; --ink:#1C2421; --green:#1F3A33; --green-2:#2D5248; --mint:#DCE6DF;
+  --oak:#C49A6C; --line:#E0DACF; --muted:#69716D;
+  --head:'Unbounded','Segoe UI',sans-serif; --sans:'Golos Text','Segoe UI',system-ui,sans-serif;
+  --fac:#D9D1C4; --top:#9A9893; --glow:0;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font:16px/1.6 var(--sans);color:var(--ink);background:var(--paper);-webkit-font-smoothing:antialiased}
+a{color:inherit;text-decoration:none}
+button,input{font:inherit;color:inherit}
+svg{display:block}
+.wrap{width:min(1200px,100% - 40px);margin-inline:auto}
+h1,h2,h3{font-family:var(--head);font-weight:700;line-height:1.1;letter-spacing:-.02em}
+.tag{display:inline-flex;align-items:center;gap:8px;font-size:13px;font-weight:600;padding:7px 14px;border-radius:999px;background:var(--mint);color:var(--green)}
+.tag i{width:7px;height:7px;border-radius:50%;background:#3E9B6E;box-shadow:0 0 0 4px rgba(62,155,110,.2)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;height:54px;padding:0 26px;border-radius:14px;border:0;cursor:pointer;
+  font-weight:600;font-size:16px;transition:transform .15s,background .2s,opacity .2s}
+.btn:active{transform:scale(.98)}
+.btn-green{background:var(--green);color:#fff}.btn-green:hover{background:var(--green-2)}
+.btn-line{background:none;box-shadow:inset 0 0 0 1.5px var(--line)}.btn-line:hover{box-shadow:inset 0 0 0 1.5px var(--ink)}
+.btn:disabled{opacity:.35;cursor:not-allowed;transform:none}
+
+/* шапка */
+header{position:sticky;top:0;z-index:20;background:rgba(241,238,231,.88);backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
+header .wrap{display:flex;align-items:center;justify-content:space-between;height:76px;gap:20px}
+.logo{display:flex;align-items:center;gap:10px;font-family:var(--head);font-weight:700;font-size:20px;letter-spacing:.08em}
+.logo b{width:30px;height:30px;border-radius:8px;background:var(--green);position:relative;overflow:hidden}
+.logo b::after{content:"";position:absolute;left:-4px;right:-4px;top:50%;height:3px;background:var(--oak);transform:rotate(-35deg)}
+.h-right{display:flex;align-items:center;gap:26px}
+.h-phone{text-align:right;line-height:1.3}.h-phone b{display:block;font-size:17px}.h-phone span{font-size:13px;color:var(--muted)}
+header .btn{height:46px;padding:0 20px;font-size:15px}
+
+/* первый экран */
+.hero{background:var(--stone);position:relative;overflow:hidden;padding:56px 0 80px}
+.hero::before{content:"";position:absolute;inset:0;opacity:.5;
+  background-image:linear-gradient(var(--line) 1px,transparent 1px),linear-gradient(90deg,var(--line) 1px,transparent 1px);
+  background-size:44px 44px;mask-image:linear-gradient(180deg,#000 0%,transparent 85%)}
+.hero-grid{position:relative;display:grid;grid-template-columns:1fr 560px;gap:56px;align-items:start}
+.hero h1{font-size:clamp(34px,4.4vw,56px);margin:22px 0 22px}
+.hero .lead{font-size:19px;color:var(--muted);max-width:500px;margin:-6px 0 26px}
+.hero h1 span{color:var(--green-2);background:linear-gradient(transparent 62%,rgba(196,154,108,.35) 62%)}
+.ticks{display:grid;gap:12px;margin-bottom:34px;list-style:none}
+.ticks li{display:flex;gap:12px;align-items:center;font-size:17px}
+.ticks li::before{content:"";flex:none;width:24px;height:24px;border-radius:50%;background:var(--green) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M7 12.5l3.2 3.2L17 9' stroke='white' stroke-width='2.6' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center/100%}
+.kitchen{background:var(--paper);border:1px solid var(--line);border-radius:24px;padding:22px 22px 14px;position:relative}
+.kitchen svg{width:100%;height:auto}
+.kitchen .cap{display:flex;justify-content:space-between;font-size:13px;color:var(--muted);margin-top:8px}
+.kitchen .cap b{color:var(--ink)}
+.fac{fill:var(--fac);transition:fill .5s}.top{fill:var(--top);transition:fill .5s}
+.glow{opacity:var(--glow);transition:opacity .5s}
+
+/* квиз */
+.quiz{background:var(--paper);border-radius:28px;box-shadow:0 30px 80px -30px rgba(28,36,33,.35),0 0 0 1px var(--line);padding:32px;position:relative;min-height:610px;display:flex;flex-direction:column}
+.q-top{display:flex;justify-content:space-between;align-items:center;font-size:14px;color:var(--muted);gap:10px}
+.q-top b{color:var(--ink)}
+.est{background:var(--mint);color:var(--green);padding:6px 12px;border-radius:10px;font-weight:600;white-space:nowrap}
+.est b{color:var(--green)}
+.bar{height:6px;border-radius:3px;background:var(--stone);margin:14px 0 28px;overflow:hidden}
+.bar i{display:block;height:100%;background:var(--green);border-radius:3px;transition:width .45s cubic-bezier(.3,.7,.2,1)}
+.stage{flex:1;animation:step .4s both}
+@keyframes step{from{opacity:0;transform:translateX(18px)}}
+.stage h3{font-size:24px;margin-bottom:6px}
+.stage .hint{color:var(--muted);font-size:15px;margin-bottom:22px}
+.opts{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.opt{border:1.5px solid var(--line);background:#fff;border-radius:18px;padding:16px;text-align:left;cursor:pointer;transition:border .2s,box-shadow .2s,transform .15s;position:relative}
+.opt:hover{border-color:#B8B0A2;transform:translateY(-2px)}
+.opt[aria-pressed=true]{border-color:var(--green);box-shadow:0 0 0 3px rgba(31,58,51,.12)}
+.opt[aria-pressed=true]::after{content:"";position:absolute;top:12px;right:12px;width:22px;height:22px;border-radius:50%;
+  background:var(--green) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M7 12.5l3.2 3.2L17 9' stroke='white' stroke-width='2.6' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center/100%}
+.opt .plan{height:88px;border-radius:12px;background:var(--stone);display:grid;place-items:center;margin-bottom:12px}
+.opt b{display:block;font-size:16px}
+.opt span{display:block;font-size:13px;color:var(--muted);line-height:1.35}
+.sw{height:64px;border-radius:12px;margin-bottom:12px;box-shadow:inset 0 0 0 1px rgba(0,0,0,.06)}
+.opt .pr{margin-top:6px;font-weight:600;color:var(--green);font-size:14px}
+.range{padding:10px 0 0}
+.len{font-family:var(--head);font-size:64px;line-height:1;margin:6px 0 26px}.len small{font-size:24px;color:var(--muted)}
+input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:8px;border-radius:4px;background:linear-gradient(90deg,var(--green) var(--p,25%),var(--stone) var(--p,25%));outline:none}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:30px;height:30px;border-radius:50%;background:#fff;border:3px solid var(--green);box-shadow:0 4px 12px rgba(0,0,0,.15);cursor:grab}
+input[type=range]::-moz-range-thumb{width:26px;height:26px;border-radius:50%;background:#fff;border:3px solid var(--green);cursor:grab}
+.scale{display:flex;justify-content:space-between;font-size:13px;color:var(--muted);margin-top:10px}
+.helper{margin-top:30px;display:flex;gap:14px;background:var(--stone);border-radius:16px;padding:16px;font-size:14px;color:var(--muted)}
+.helper svg{flex:none}
+.checks{display:grid;gap:10px}
+.check{display:flex;align-items:center;gap:14px;border:1.5px solid var(--line);border-radius:16px;padding:14px 16px;cursor:pointer;background:#fff;text-align:left;transition:border .2s}
+.check[aria-pressed=true]{border-color:var(--green)}
+.check .box{flex:none;width:24px;height:24px;border-radius:7px;border:2px solid #C9C2B5;display:grid;place-items:center;transition:.2s}
+.check[aria-pressed=true] .box{background:var(--green);border-color:var(--green)}
+.check[aria-pressed=false] .box svg{opacity:0}
+.check div{flex:1}.check b{display:block}.check span{font-size:13px;color:var(--muted)}
+.check em{font-style:normal;font-weight:600;color:var(--green);white-space:nowrap}
+.q-nav{display:flex;justify-content:space-between;gap:12px;margin-top:26px}
+.q-nav .btn-green{flex:1;max-width:260px}
+
+.result .eyebrow{font-size:13px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.sum{font-family:var(--head);font-size:32px;white-space:nowrap;line-height:1.15;margin:8px 0 16px}
+.sum small{white-space:normal;display:block;font-family:var(--sans);font-size:15px;font-weight:500;color:var(--muted);margin-top:6px}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:20px}
+.chips span{font-size:13px;font-weight:600;padding:6px 12px;border-radius:999px;background:var(--stone)}
+.gift{display:flex;gap:14px;align-items:center;background:linear-gradient(120deg,#F3E6D5,#EADCC8);border-radius:16px;padding:14px 16px;font-size:14px;margin-bottom:20px}
+.gift b{display:block;font-size:15px}
+.gift i{flex:none;width:44px;height:44px;border-radius:12px;background:var(--oak);display:grid;place-items:center}
+.seg{display:flex;gap:6px;background:var(--stone);padding:5px;border-radius:14px;margin-bottom:10px}
+.seg button{flex:1;height:40px;border:0;border-radius:10px;background:none;font-weight:600;font-size:14px;cursor:pointer;color:var(--muted)}
+.seg button[aria-pressed=true]{background:#fff;color:var(--ink);box-shadow:0 2px 6px rgba(0,0,0,.08)}
+.phone-row{display:flex;gap:10px}
+.phone-row input{flex:1;min-width:0;height:54px;border-radius:14px;border:1.5px solid var(--line);padding:0 16px;outline:none;background:#fff}
+.phone-row input:focus{border-color:var(--green)}.phone-row input.bad{border-color:#D2604A}
+.fine{font-size:12px;color:var(--muted);margin-top:10px}
+.sent{text-align:center;padding:40px 10px;display:grid;justify-items:center;gap:12px}
+.sent .ok{width:76px;height:76px;border-radius:50%;background:var(--green);display:grid;place-items:center}
+
+/* блоки ниже */
+section{padding:100px 0}
+.sec-head{display:flex;justify-content:space-between;align-items:end;gap:30px;margin-bottom:44px;flex-wrap:wrap}
+.sec-head h2{font-size:clamp(28px,3.4vw,42px);max-width:620px}
+.sec-head p{max-width:380px;color:var(--muted)}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);border:1px solid var(--line);border-radius:24px;overflow:hidden;background:#fff}
+.stats div{padding:30px 28px}.stats div+div{border-left:1px solid var(--line)}
+.stats b{display:block;font-family:var(--head);font-size:40px;color:var(--green)}
+.stats span{color:var(--muted);font-size:15px}
+.steps{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;counter-reset:s}
+.st{background:var(--stone);border-radius:22px;padding:28px;min-height:250px;display:flex;flex-direction:column;counter-increment:s}
+.st::before{content:"0" counter(s);font-family:var(--head);font-size:14px;color:var(--oak);margin-bottom:auto}
+.st h3{font-size:19px;margin:40px 0 10px}.st p{font-size:15px;color:var(--muted)}
+.st.dark{background:var(--green);color:#fff}.st.dark p{color:rgba(255,255,255,.7)}
+.faq{display:grid;gap:10px;max-width:860px}
+details{background:#fff;border:1px solid var(--line);border-radius:18px;padding:0 24px}
+summary{list-style:none;cursor:pointer;display:flex;justify-content:space-between;align-items:center;gap:20px;padding:22px 0;font-weight:600;font-size:18px}
+summary::-webkit-details-marker{display:none}
+summary::after{content:"+";flex:none;width:34px;height:34px;border-radius:50%;background:var(--stone);display:grid;place-items:center;font-size:22px;font-weight:400;transition:transform .25s}
+details[open] summary::after{transform:rotate(45deg)}
+details p{padding:0 0 22px;color:var(--muted);max-width:700px}
+.cta{background:var(--green);color:#fff;border-radius:32px;padding:56px;display:grid;grid-template-columns:1.1fr .9fr;gap:40px;align-items:center;position:relative;overflow:hidden}
+.cta::after{content:"";position:absolute;right:-80px;top:-80px;width:320px;height:320px;border-radius:50%;border:50px solid rgba(196,154,108,.25)}
+.cta h2{font-size:clamp(26px,3vw,38px)}.cta p{color:rgba(255,255,255,.7);margin-top:14px}
+.cta .phone-row{position:relative;z-index:1}
+.cta input{border-color:transparent}
+.cta .btn{background:var(--oak);color:var(--ink)}
+footer{padding:40px 0;color:var(--muted);font-size:14px}
+footer .wrap{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap;border-top:1px solid var(--line);padding-top:30px}
+
+@media (max-width:1100px){.hero-grid{grid-template-columns:1fr}.quiz{max-width:640px}}
+@media (max-width:860px){
+  .h-phone{display:none}
+  .stats{grid-template-columns:1fr 1fr}.stats div:nth-child(3){border-left:0}.stats div:nth-child(n+3){border-top:1px solid var(--line)}
+  .steps{grid-template-columns:1fr 1fr}
+  .cta{grid-template-columns:1fr;padding:36px 26px}
+  section{padding:70px 0}
+}
+@media (max-width:560px){
+  header .btn{display:none}
+  .hero{padding:34px 0 50px}
+  .quiz{padding:22px 18px;border-radius:22px;min-height:0}
+  .q-top{flex-direction:column;align-items:flex-start}
+  .opts{gap:10px}.opt{padding:12px}.opt .plan{height:70px}
+  .stage h3{font-size:20px}
+  .len{font-size:52px}
+  .sum{font-size:22px}
+  .ticks{display:none}.hero .lead{font-size:17px;margin-bottom:0}
+  .hero-grid{gap:26px}.hero-grid>*{min-width:0}
+  .steps{grid-template-columns:1fr}.st{min-height:0}
+  .phone-row{flex-direction:column}.phone-row input{flex:none;width:100%}
+  .kitchen{display:none}
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <a class="logo" href="#"><b></b>ЛИНИЯ</a>
+    <div class="h-right">
+      <div class="h-phone"><b>+7 (900) 000-00-00</b><span>ежедневно с 9 до 21</span></div>
+      <a class="btn btn-green" href="#cta">Вызвать замерщика</a>
+    </div>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="wrap hero-grid">
+    <div>
+      <span class="tag"><i></i>Свободно 6 замеров на этой неделе</span>
+      <h1>Узнайте цену кухни <span>за&nbsp;1&nbsp;минуту</span></h1>
+      <p class="lead">Без звонков менеджеру и ожидания сметы: отвечаете на вопросы — цена пересчитывается на глазах.</p>
+      <ul class="ticks">
+        <li>Ответьте на 5 вопросов — расчёт меняется сразу</li>
+        <li>3D-проект и замер — бесплатно</li>
+        <li>Собственное производство, гарантия 5 лет</li>
+      </ul>
+      <div class="kitchen" aria-label="Эскиз кухни меняется вместе с ответами">
+        <svg viewBox="0 0 560 300">
+          <defs><linearGradient id="lg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FFE9B8" stop-opacity=".9"/><stop offset="1" stop-color="#FFE9B8" stop-opacity="0"/></linearGradient></defs>
+          <rect x="0" y="0" width="560" height="282" fill="#F6F3EE"/>
+          <rect x="0" y="282" width="560" height="18" fill="#E6E0D6"/>
+          <!-- верхние шкафы -->
+          <rect class="fac" x="40" y="18" width="78" height="92" rx="3"/><rect class="fac" x="121" y="18" width="78" height="92" rx="3"/>
+          <path d="M224 66h92l14 44H210z" fill="#CFC9BF"/><rect x="250" y="18" width="40" height="48" fill="#DAD5CC"/>
+          <rect class="fac" x="342" y="18" width="88" height="92" rx="3"/><rect class="fac" x="433" y="18" width="88" height="92" rx="3"/>
+          <g stroke="rgba(0,0,0,.28)" stroke-width="3" stroke-linecap="round"><path d="M108 88v14M131 88v14M420 88v14M443 88v14"/></g>
+          <!-- подсветка -->
+          <rect class="glow" x="36" y="110" width="168" height="62" fill="url(#lg)"/><rect class="glow" x="338" y="110" width="187" height="62" fill="url(#lg)"/>
+          <rect class="glow" x="40" y="110" width="159" height="3" fill="#FFD27A"/><rect class="glow" x="342" y="110" width="179" height="3" fill="#FFD27A"/>
+          <!-- столешница и мойка -->
+          <rect class="top" x="30" y="170" width="500" height="13" rx="2"/>
+          <path d="M392 170v-30a12 12 0 0 1 24 0" stroke="#8D9592" stroke-width="5" fill="none" stroke-linecap="round"/>
+          <rect x="370" y="168" width="62" height="5" rx="2" fill="#7E8683"/>
+          <!-- нижние шкафы -->
+          <rect class="fac" x="40" y="186" width="160" height="27" rx="3"/><rect class="fac" x="40" y="216" width="160" height="27" rx="3"/><rect class="fac" x="40" y="246" width="160" height="27" rx="3"/>
+          <g stroke="rgba(0,0,0,.28)" stroke-width="3" stroke-linecap="round"><path d="M104 199h32M104 229h32M104 259h32"/></g>
+          <rect x="203" y="186" width="118" height="87" rx="3" fill="#2B2F2E"/><rect x="214" y="206" width="96" height="52" rx="4" fill="#3E4544"/><path d="M220 196h84" stroke="#7E8683" stroke-width="3" stroke-linecap="round"/>
+          <rect class="fac" x="324" y="186" width="98" height="87" rx="3"/><rect class="fac" x="425" y="186" width="96" height="87" rx="3"/>
+          <g stroke="rgba(0,0,0,.28)" stroke-width="3" stroke-linecap="round"><path d="M412 200v14M435 200v14"/></g>
+          <rect x="40" y="273" width="481" height="9" fill="#2B2F2E" opacity=".75"/>
+          <!-- декор -->
+          <circle cx="98" cy="160" r="9" fill="#7FA28C"/><rect x="92" y="150" width="12" height="20" rx="3" fill="#E9E4DA"/>
+          <rect x="140" y="146" width="20" height="24" rx="4" fill="#C9B79C"/><rect x="164" y="152" width="14" height="18" rx="3" fill="#B8A487"/>
+        </svg>
+        <div class="cap"><span>Эскиз меняется вместе с ответами</span><span>Фасады: <b id="capFac">ЛДСП «Кашемир»</b></span></div>
+      </div>
+    </div>
+
+    <div class="quiz" id="quiz">
+      <div class="q-top"><span id="stepLbl">Вопрос 1 из 5</span><span class="est">Предварительно: <b id="est">—</b></span></div>
+      <div class="bar"><i id="bar" style="width:20%"></i></div>
+      <div class="stage" id="stage"></div>
+      <div class="q-nav" id="nav">
+        <button class="btn btn-line" id="back">← Назад</button>
+        <button class="btn btn-green" id="next">Далее →</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="stats">
+      <div><b>5 лет</b><span>гарантии на корпус и фурнитуру</span></div>
+      <div><b>21 день</b><span>производство после согласования проекта</span></div>
+      <div><b>1 день</b><span>на монтаж — без пыли и мусора</span></div>
+      <div><b>0 ₽</b><span>замер и 3D-проект, даже если не закажете</span></div>
+    </div>
+  </div>
+</section>
+
+<section style="padding-top:0">
+  <div class="wrap">
+    <div class="sec-head"><h2>Как появляется ваша кухня</h2><p>От первого звонка до ужина на новой кухне — около месяца. Цена фиксируется в договоре и не растёт.</p></div>
+    <div class="steps">
+      <div class="st"><h3>Замер</h3><p>Замерщик приезжает с образцами фасадов и столешниц — выбираете вживую.</p></div>
+      <div class="st"><h3>3D-проект</h3><p>Показываем кухню с вашей техникой и розетками. Правим, пока не понравится.</p></div>
+      <div class="st"><h3>Производство</h3><p>21 день в собственном цеху. Присылаем фото на каждом этапе.</p></div>
+      <div class="st dark"><h3>Монтаж</h3><p>Собираем за один день, подключаем мойку и технику, вывозим мусор.</p></div>
+    </div>
+  </div>
+</section>
+
+<section style="padding-top:0">
+  <div class="wrap">
+    <div class="sec-head"><h2>Частые вопросы</h2></div>
+    <div class="faq">
+      <details open><summary>Насколько точен расчёт в квизе?</summary><p>Погрешность — 10–15%. Точную цену дизайнер называет после замера: она зависит от ниш, коммуникаций и выбранной фурнитуры. В договоре цена фиксируется.</p></details>
+      <details><summary>Можно ли встроить мою технику?</summary><p>Да. Пришлите модели духового шкафа, посудомойки и холодильника — учтём размеры и вентиляцию в проекте.</p></details>
+      <details><summary>Есть ли рассрочка?</summary><p>Есть рассрочка без переплаты на 6 месяцев. Первый взнос — от 30% после подписания договора.</p></details>
+      <details><summary>Что если кухня не подойдёт по размеру?</summary><p>Ответственность за замер — на нас. Если ошиблись мы, переделаем элемент бесплатно.</p></details>
+    </div>
+  </div>
+</section>
+
+<section style="padding-top:0" id="cta">
+  <div class="wrap">
+    <div class="cta">
+      <div><h2>Не хочется отвечать на вопросы?</h2><p>Оставьте телефон — дизайнер перезвонит за 15 минут и всё посчитает сам.</p></div>
+      <form class="phone-row" id="ctaForm" novalidate>
+        <input type="tel" placeholder="+7 (___) ___-__-__" aria-label="Телефон" class="tel">
+        <button class="btn" type="submit">Жду звонка</button>
+      </form>
+    </div>
+  </div>
+</section>
+
+<footer><div class="wrap"><span>© 2026 Мастерская кухонь «Линия»</span><span>Концепт сайта для портфолио: компания и цены вымышленные</span></div></footer>
+
+<script>
+const PLAN = {
+  line:'<rect x="14" y="20" width="72" height="16" rx="3" fill="#1F3A33"/>',
+  corner:'<path d="M14 20h72v16H30v34H14z" fill="#1F3A33"/>',
+  u:'<path d="M14 20h72v50H70V36H30v34H14z" fill="#1F3A33"/>',
+  island:'<rect x="14" y="20" width="72" height="16" rx="3" fill="#1F3A33"/><rect x="30" y="50" width="40" height="16" rx="3" fill="#C49A6C"/>',
+};
+const plan = k => `<svg width="100" height="84" viewBox="0 0 100 84">${PLAN[k]}</svg>`;
+const STEPS = [
+  {key:'shape', title:'Какой формы будет кухня?', hint:'Выберите вариант — перейдём к следующему вопросу', type:'cards', opts:[
+    {v:'line',t:'Прямая',d:'Вдоль одной стены',k:1},
+    {v:'corner',t:'Угловая',d:'Г-образная, самая популярная',k:1.12},
+    {v:'u',t:'П-образная',d:'Максимум места для хранения',k:1.25},
+    {v:'island',t:'С островом',d:'Для просторной кухни-гостиной',k:1.4},
+  ]},
+  {key:'len', title:'Какая общая длина кухни?', hint:'Сложите длину по всем стенам, где будут шкафы', type:'range'},
+  {key:'fac', title:'Из чего сделать фасады?', hint:'Фасады — это дверцы и ящики, их видно больше всего', type:'swatch', opts:[
+    {v:'ldsp',t:'ЛДСП',n:'«Кашемир»',d:'Практично и недорого',rate:19000,c:'#D9D1C4'},
+    {v:'agt',t:'Пластик AGT',n:'«Шалфей»',d:'Матовый, не видно пальцев',rate:26000,c:'#A9B7A3'},
+    {v:'mdf',t:'МДФ эмаль',n:'«Графит»',d:'Любой цвет по палитре RAL',rate:34000,c:'#3D4342'},
+    {v:'veneer',t:'Шпон дуба',n:'«Натуральный»',d:'Тёплая живая фактура',rate:46000,c:'#B88A5A'},
+  ]},
+  {key:'top', title:'Какую столешницу ставим?', hint:'Цена — за погонный метр', type:'swatch', opts:[
+    {v:'ldsp',t:'ЛДСП',n:'«Бетон»',d:'Влагостойкая кромка',rate:3500,c:'#9A9893'},
+    {v:'compact',t:'Компакт-плита',n:'«Антрацит»',d:'Тонкая, 12 мм',rate:9000,c:'#2C2E2F'},
+    {v:'quartz',t:'Кварц',n:'«Белый мрамор»',d:'Не боится горячего',rate:21000,c:'#ECEAE5'},
+    {v:'oak',t:'Массив дуба',n:'«Медовый»',d:'Покрыт маслом-воском',rate:15000,c:'#C9965C'},
+  ]},
+  {key:'extra', title:'Что ещё добавить?', hint:'Можно выбрать несколько вариантов', type:'checks', opts:[
+    {v:'light',t:'Подсветка рабочей зоны',d:'Светодиодная лента под шкафами',p:12000},
+    {v:'blum',t:'Фурнитура Blum',d:'Доводчики на всех ящиках и дверцах',p:18000},
+    {v:'sink',t:'Мойка и смеситель',d:'Подберём под цвет столешницы',p:14000},
+    {v:'mount',t:'Доставка и сборка',d:'Под ключ, с подключением техники',pct:9},
+  ]},
+];
+const S = {shape:null, len:3.5, fac:null, top:null, extra:new Set(['blum','mount'])};
+let step = 0;
+const $ = id => document.getElementById(id);
+const rub = n => Math.round(n/1000)*1000;
+const fmt = n => n.toLocaleString('ru-RU') + ' ₽';
+const opt = (key, v) => STEPS.find(s=>s.key===key).opts.find(o=>o.v===v);
+
+function price(){
+  const k = opt('shape', S.shape||'line').k;
+  const fac = opt('fac', S.fac||'ldsp').rate, top = opt('top', S.top||'ldsp').rate;
+  let sum = S.len*fac*k + S.len*top;
+  STEPS[4].opts.forEach(o=>{ if(S.extra.has(o.v) && o.p) sum += o.p; });
+  if(S.extra.has('mount')) sum *= 1.09;
+  return sum;
+}
+function paint(){
+  const root = document.documentElement.style;
+  const f = opt('fac', S.fac||'ldsp'), t = opt('top', S.top||'ldsp');
+  root.setProperty('--fac', f.c); root.setProperty('--top', t.c);
+  root.setProperty('--glow', S.extra.has('light') ? 1 : 0);
+  $('capFac').textContent = `${f.t} ${f.n}`;
+  $('est').textContent = step===0 && !S.shape ? '—' : 'от ' + fmt(rub(price()*0.92));
+}
+function render(){
+  const stage = $('stage');
+  stage.style.animation = 'none'; stage.offsetHeight; stage.style.animation = '';
+  $('bar').style.width = Math.min(100,(step+1)*20) + '%';
+  $('nav').style.display = step===5 ? 'none' : 'flex';
+  $('back').style.visibility = step ? 'visible' : 'hidden';
+  if(step===5){ renderResult(); paint(); return; }
+  const s = STEPS[step];
+  $('stepLbl').innerHTML = `Вопрос <b>${step+1}</b> из 5`;
+  let html = `<h3>${s.title}</h3><p class="hint">${s.hint}</p>`;
+  if(s.type==='cards') html += `<div class="opts">${s.opts.map(o=>`
+      <button class="opt" data-v="${o.v}" aria-pressed="${S.shape===o.v}"><div class="plan">${plan(o.v)}</div><b>${o.t}</b><span>${o.d}</span></button>`).join('')}</div>`;
+  if(s.type==='swatch') html += `<div class="opts">${s.opts.map(o=>`
+      <button class="opt" data-v="${o.v}" aria-pressed="${S[s.key]===o.v}"><div class="sw" style="background:${o.c}${o.v==='veneer'||o.v==='oak'?';background-image:repeating-linear-gradient(100deg,rgba(255,255,255,.08) 0 3px,transparent 3px 11px)':''}"></div>
+      <b>${o.t} <span style="display:inline;color:inherit;font-weight:400">${o.n}</span></b><span>${o.d}</span><div class="pr">${s.key==='fac'?'от ':''}${o.rate.toLocaleString('ru-RU')} ₽/м</div></button>`).join('')}</div>`;
+  if(s.type==='range') html += `<div class="range"><div class="len"><span id="lenV">${String(S.len).replace('.',',')}</span> <small>м</small></div>
+      <input type="range" min="2" max="8" step="0.5" value="${S.len}" id="lenR" aria-label="Длина кухни в метрах">
+      <div class="scale"><span>2 м</span><span>5 м</span><span>8 м</span></div>
+      <div class="helper"><svg width="22" height="22" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill="none" stroke="#1F3A33" stroke-width="2"/><path d="M12 11v6M12 7.5v.5" stroke="#1F3A33" stroke-width="2.4" stroke-linecap="round"/></svg>
+      <div>Не знаете точно? Ставьте примерно — замерщик всё уточнит бесплатно. Средняя кухня в квартире — 3–3,5 метра.</div></div></div>`;
+  if(s.type==='checks') html += `<div class="checks">${s.opts.map(o=>`
+      <button class="check" data-v="${o.v}" aria-pressed="${S.extra.has(o.v)}"><span class="box"><svg width="14" height="14" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5" stroke="#fff" stroke-width="3.4" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+      <div><b>${o.t}</b><span>${o.d}</span></div><em>${o.p?'+'+o.p.toLocaleString('ru-RU')+' ₽':'+'+o.pct+'%'}</em></button>`).join('')}</div>`;
+  stage.innerHTML = html;
+  $('next').disabled = (s.type==='cards'||s.type==='swatch') && !S[s.key];
+  $('next').textContent = step===4 ? 'Показать расчёт →' : 'Далее →';
+  const r = $('lenR');
+  if(r){ const upd=()=>{ S.len=+r.value; $('lenV').textContent=String(S.len).replace('.',','); r.style.setProperty('--p',((S.len-2)/6*100)+'%'); paint(); }; r.oninput=upd; upd(); }
+  paint();
+}
+function renderResult(){
+  $('stepLbl').innerHTML = '<b>Готово!</b> Вот ваш расчёт';
+  const p = price(), f = opt('fac',S.fac), t = opt('top',S.top), sh = opt('shape',S.shape);
+  const chips = [sh.t, String(S.len).replace('.',',')+' м', f.t+' '+f.n, 'Столешница: '+t.t, ...STEPS[4].opts.filter(o=>S.extra.has(o.v)).map(o=>o.t)];
+  $('stage').innerHTML = `<div class="result">
+    <div class="eyebrow">Стоимость вашей кухни</div>
+    <div class="sum">${rub(p*0.92).toLocaleString('ru-RU')} – ${fmt(rub(p*1.12))}<small>Точную цену зафиксируем в договоре после замера</small></div>
+    <div class="chips">${chips.map(c=>`<span>${c}</span>`).join('')}</div>
+    <div class="gift"><i><svg width="24" height="24" viewBox="0 0 24 24"><path d="M4 11h16v10H4zM2 7h20v4H2zM12 7v14M12 7S10 2 7.5 3.5 9 7 12 7zm0 0s2-5 4.5-3.5S15 7 12 7z" fill="none" stroke="#1C2421" stroke-width="1.8" stroke-linejoin="round"/></svg></i>
+      <div><b>Бонус к расчёту</b>3D-проект бесплатно и скидка 10% на встраиваемую технику</div></div>
+    <form id="resForm" novalidate>
+      <div class="seg" id="seg"><button type="button" aria-pressed="true">WhatsApp</button><button type="button" aria-pressed="false">Telegram</button><button type="button" aria-pressed="false">SMS</button></div>
+      <div class="phone-row"><input type="tel" class="tel" placeholder="+7 (___) ___-__-__" aria-label="Телефон"><button class="btn btn-green" type="submit">Получить расчёт</button></div>
+      <p class="fine">Пришлём расчёт с фото похожих кухонь. Без спама — только по делу.</p>
+    </form>
+    <button class="btn btn-line" id="restart" style="margin-top:14px;height:44px;font-size:14px">← Изменить ответы</button></div>`;
+  $('seg').onclick = e=>{ const b=e.target.closest('button'); if(!b) return; [...$('seg').children].forEach(x=>x.setAttribute('aria-pressed',x===b)); };
+  $('restart').onclick = ()=>{ step=0; render(); };
+  bindPhone($('resForm'), (via)=>{
+    $('stage').innerHTML = `<div class="sent"><div class="ok"><svg width="36" height="36" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5" stroke="#fff" stroke-width="2.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+      <h3 style="font-size:24px">Расчёт отправлен!</h3><p style="color:var(--muted);max-width:340px">Дизайнер напишет вам в ${via} в течение 15 минут и предложит удобное время для бесплатного замера.</p></div>`;
+  });
+}
+function bindPhone(form, done){
+  const inp = form.querySelector('.tel');
+  inp.addEventListener('input', ()=>{
+    let d = inp.value.replace(/\D/g,'').replace(/^[78]/,'').slice(0,10);
+    const p=[d.slice(0,3),d.slice(3,6),d.slice(6,8),d.slice(8,10)];
+    inp.value = d ? `+7 (${p[0]}${d.length>3?') '+p[1]:''}${d.length>6?'-'+p[2]:''}${d.length>8?'-'+p[3]:''}` : '';
+    inp.classList.remove('bad');
+  });
+  form.addEventListener('submit', e=>{
+    e.preventDefault();
+    if(inp.value.replace(/\D/g,'').length!==11){ inp.classList.add('bad'); inp.focus(); return; }
+    const sel = form.querySelector('.seg [aria-pressed=true]');
+    done(sel ? sel.textContent : 'SMS');
+  });
+}
+$('stage').addEventListener('click', e=>{
+  const s = STEPS[step]; if(!s) return;
+  const b = e.target.closest('.opt,.check'); if(!b) return;
+  if(s.type==='checks'){ S.extra.has(b.dataset.v) ? S.extra.delete(b.dataset.v) : S.extra.add(b.dataset.v); b.setAttribute('aria-pressed', S.extra.has(b.dataset.v)); paint(); return; }
+  S[s.key] = b.dataset.v;
+  document.querySelectorAll('#stage .opt').forEach(x=>x.setAttribute('aria-pressed', x===b));
+  $('next').disabled = false; paint();
+  setTimeout(()=>{ if(STEPS[step]===s){ step++; render(); } }, 380);
+});
+$('next').onclick = ()=>{ step++; render(); };
+$('back').onclick = ()=>{ step = Math.max(0, step-1); render(); };
+bindPhone($('ctaForm'), ()=>{ $('ctaForm').innerHTML = '<p style="font-size:18px;font-weight:600">Спасибо! Перезвоним в течение 15 минут.</p>'; });
+
+// демо-состояния для скриншотов: #step=3 или #result
+const m = location.hash.match(/step=(\d)|result/);
+if(m){ Object.assign(S,{shape:'corner',len:3.5}); if(m[0]==='result'){ Object.assign(S,{fac:'mdf',top:'quartz'}); S.extra.add('light'); step=5; } else { step=+m[1]-1; if(step>=2) S.fac='agt'; } }
+render();
+</script>
+</body>
+</html>
