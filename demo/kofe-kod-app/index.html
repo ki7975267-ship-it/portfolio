@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="color-scheme" content="light dark">
+  <title>Меню и заказ</title>
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div id="app" class="app" aria-live="polite">
+    <div class="loading" id="loading">
+      <div class="spinner" aria-hidden="true"></div>
+      <p>Загружаем меню…</p>
+    </div>
+  </div>
+
+  <template id="tpl-shell">
+    <header class="hero">
+      <div class="hero__logo" data-bind="logo"></div>
+      <div class="hero__text">
+        <h1 class="hero__name" data-bind="name"></h1>
+        <p class="hero__meta"><span data-bind="tagline"></span> · <span data-bind="address"></span></p>
+      </div>
+      <span class="status" data-bind="status"></span>
+    </header>
+
+    <nav class="tabs" role="tablist">
+      <button class="tabs__btn is-active" role="tab" data-tab="menu" aria-selected="true">Меню</button>
+      <button class="tabs__btn" role="tab" data-tab="about" aria-selected="false">О нас</button>
+    </nav>
+
+    <main>
+      <section class="screen" data-screen="menu"></section>
+      <section class="screen" data-screen="about" hidden></section>
+      <section class="screen" data-screen="cart" hidden></section>
+    </main>
+
+    <div class="demo-note" data-bind="demo" hidden></div>
+    <button class="bar" type="button" data-bind="bar" hidden></button>
+  </template>
+
+  <div class="sheet" id="sheet" hidden>
+    <div class="sheet__card" role="dialog" aria-modal="true" aria-labelledby="sheet-title">
+      <h2 id="sheet-title"></h2>
+      <p id="sheet-text"></p>
+      <pre id="sheet-pre" hidden></pre>
+      <button class="btn" type="button" id="sheet-close">Понятно</button>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
